@@ -1,0 +1,3 @@
+role: "default"
+history: 3
+mask_think: False  # 是否输出<think>部分

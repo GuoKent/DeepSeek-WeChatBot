@@ -1,0 +1,14 @@
+mode: "local"  # options: {local, api}
+frame: "transformers"  # options: {transformers, vllm}
+model_name: "DeepSeek-R1-Distill-Qwen-1.5B"
+role: "default"
+history: 3
+
+model_config:
+  transformers:
+    torch_dtype: "auto"
+    max_token: 512
+    num_beams: 1  # num_beams=1 禁用束搜索
+    do_sample: False  # 禁用采样
+    use_cache: True  # 启用KV cache
+    use_streamer: True

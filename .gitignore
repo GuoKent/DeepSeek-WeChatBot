@@ -1,0 +1,14 @@
+.*
+!.gitignore
+!.github/
+
+*pyc
+__pycache__
+
+logs/
+*.log
+*.log.*
+
+config.yaml
+prompts/*
+!prompts/default.txt
