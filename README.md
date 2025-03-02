@@ -62,14 +62,14 @@
 
 > DeepSeek 官方提示词规范：[链接](https://api-docs.deepseek.com/prompt-library)
 
-#### 参考示例：
+### 参考示例：
 
 - `default.txt`：你是DeepSeek-R1，一个非常有用的AI助手。
 
 - `math_helper.txt`：你是一位数学领域内的专家，精通解答各种复杂困难的数学难题。请根据用户输入的数学问题，给他们完整详细的解题步骤。
 - `feibi.txt`：你的名字叫菲比，你的身份是教会的一名修女，善于帮助用户解决他们的日常生活问题。请以活泼可爱的语气回复用户，并解决他们的日常问题。
 
-#### 结果展示：
+### 结果展示：
 
 <div style="display: flex; justify-content: space-between; gap: 10px;">
   <img src="assets/demo4.jpg" alt="demo4" style="width: 48%;"/>
