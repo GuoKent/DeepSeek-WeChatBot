@@ -10,3 +10,5 @@ logs/
 
 prompts/*
 !prompts/default.txt
+!prompts/math_helper.txt
+!prompts/feibi.txt

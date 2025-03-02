@@ -1,7 +1,7 @@
 mode: "local"  # options: {local, api}
 frame: "transformers"  # options: {transformers, vllm}
-model_name: "DeepSeek-R1-Distill-Qwen-1.5B"
-role: "default"
+model_name: "DeepSeek-R1-Distill-Qwen-7B"
+role: "math_helper"
 history: 3
 
 model_config:

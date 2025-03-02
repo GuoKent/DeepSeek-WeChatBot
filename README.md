@@ -51,14 +51,30 @@
 ## 配置
 
 - 若要启动群聊功能，需要在`configs/robot.yaml`文件中`groups`字段添加群聊id
-
 - `configs/deepseek.yaml`中修改模型配置(待优化，目前仅能按默认配置使用)
-
-- 角色扮演功能：您需要在`prompts/{角色名}.txt`中定义模型扮演角色的提示词，并且在`configs/deepseek.yaml`中`role`字段修改为`<角色名>`
-
-  > DeepSeek 官方提示词规范：[链接](https://api-docs.deepseek.com/prompt-library)
-
 - 隐藏思考过程：在`configs/user.yaml`中将`mask_think`设置为`True`，即可在对话中隐藏思考过程
+
+
+
+## 角色扮演
+
+角色扮演功能：您需要在`prompts/{角色名}.txt`中定义模型扮演角色的提示词，并且在`configs/deepseek.yaml`中`role`字段修改为`<角色名>`。**该提示词作为系统提示词输入进模型中，与用户提示词分开。**
+
+> DeepSeek 官方提示词规范：[链接](https://api-docs.deepseek.com/prompt-library)
+
+#### 参考示例：
+
+- `default.txt`：你是DeepSeek-R1，一个非常有用的AI助手。
+
+- `math_helper.txt`：你是一位数学领域内的专家，精通解答各种复杂困难的数学难题。请根据用户输入的数学问题，给他们完整详细的解题步骤。
+- `feibi.txt`：你的名字叫菲比，你的身份是教会的一名修女，善于帮助用户解决他们的日常生活问题。请以活泼可爱的语气回复用户，并解决他们的日常问题。
+
+#### 结果展示：
+
+<div style="display: flex; justify-content: space-between; gap: 10px;">
+  <img src="assets/demo4.jpg" alt="demo4" style="width: 48%;"/>
+  <img src="assets/demo5.jpg" alt="demo5" style="width: 48%;"/>
+</div>
 
 
 
@@ -93,6 +109,6 @@
 
 
 
-##### 若您觉得这个项目对您有用：
+## 若您觉得这个项目对您有用：
 
 ![8706b63bfb993286df4531557e6f977](./assets/qrcode.jpg)
