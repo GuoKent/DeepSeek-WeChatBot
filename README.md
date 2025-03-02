@@ -12,9 +12,10 @@
 ## Demo
 
 <div style="display: flex; justify-content: space-between; gap: 10px;">
-  <img src="assets/demo1.jpg" alt="demo1" style="width: 48%;"/>
-  <img src="assets/demo2.jpg" alt="demo2" style="width: 48%;"/>
+  <img src="assets/demo7.jpg" alt="demo1" style="width: 48%;"/>
+  <img src="assets/demo6.jpg" alt="demo2" style="width: 48%;"/>
 </div>
+
 
 
 
