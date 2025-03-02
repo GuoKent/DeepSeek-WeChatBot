@@ -11,7 +11,7 @@ from wcferry import Wcf, WxMsg
 from model.deepseek import DeepSeek
 from configs.robot_config import Config
 from job_mgmt import Job
-from utils.func_news import News
+# from utils.func_news import News
 from utils.utils import load_model_config
 
 __version__ = "39.2.4.0"
@@ -221,11 +221,11 @@ class Robot(Job):
             self.allContacts[msg.sender] = nickName[0]
             self.sendTextMsg(f"Hi {nickName[0]}，我自动通过了你的好友请求。", msg.sender)
 
-    def newsReport(self) -> None:
-        receivers = self.config.NEWS
-        if not receivers:
-            return
+    # def newsReport(self) -> None:
+    #     receivers = self.config.NEWS
+    #     if not receivers:
+    #         return
 
-        news = News().get_important_news()
-        for r in receivers:
-            self.sendTextMsg(news, r)
+    #     news = News().get_important_news()
+    #     for r in receivers:
+    #         self.sendTextMsg(news, r)
