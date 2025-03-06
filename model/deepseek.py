@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from itertools import chain
 root_dir = Path(__file__).parent.parent
 sys.path.append(str(root_dir))
 
@@ -48,10 +49,15 @@ class DeepSeek:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 torch_dtype="auto",
-                device_map="auto",
+                device_map="cuda:0",
+                # llm_int8_enable_fp32_cpu_offload=True,
                 low_cpu_mem_usage=True,
                 # use_flash_attention_2=True,
                 attn_implementation="flash_attention_2",
+                quantization_config={
+                    "load_in_4bit": True,  # 4-bit量化
+                    "bnb_4bit_compute_dtype": torch.float16
+                }
             )
             self.model = torch.compile(self.model)  # dynamic graph compile (improve not much)
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
@@ -73,11 +79,18 @@ class DeepSeek:
         self.generate_mode = "api"
         pass
 
-    def clean_history_messages(self, messages, history=3):
+    def clean_history_messages(self, messages: list, history: int=3) -> list:
         '''
-            清除历史记录
+        清除历史记录
+        Args:
+            messages: list, {{"role": "system", "content": self.sys_prompt}, ...}
         '''
-        return messages if len(messages) <= 2 * history + 1 else [{"role": "system", "content": self.sys_prompt}].extend(messages[-2 * history:])
+        if history == 0:
+            return [{"role": "system", "content": self.sys_prompt}]
+        elif len(messages) <= 2 * history + 1:
+            return messages
+        else:
+            return list(chain([{"role": "system", "content": self.sys_prompt}], messages[-2 * history:]))
 
     def generate_tfs(self, messages: list):
         end = time.time()
@@ -95,7 +108,7 @@ class DeepSeek:
                 max_new_tokens=2048,
                 # load_in_4bit=True,                        # 4-bit量化
                 num_beams=1,                                # 禁用束搜索
-                do_sample=False,                            # 禁用采样
+                do_sample=True,                            # 禁用采样
                 use_cache=True,                             # 启用KV缓存
                 pad_token_id=self.tokenizer.pad_token_id,   # 配置padding_id
                 eos_token_id=self.tokenizer.eos_token_id,   # 配置eos_id

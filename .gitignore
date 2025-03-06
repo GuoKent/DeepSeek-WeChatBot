@@ -1,5 +1,4 @@
 .*
-.gitignore
 
 *pyc
 __pycache__
@@ -12,3 +11,6 @@ prompts/*
 !prompts/default.txt
 !prompts/math_helper.txt
 !prompts/feibi.txt
+
+pre_info/*
+!pre_info/xxxx@chatroom.txt

@@ -12,7 +12,7 @@ from model.deepseek import DeepSeek
 from configs.robot_config import Config
 from job_mgmt import Job
 # from utils.func_news import News
-from utils.utils import load_model_config
+from utils.utils import load_model_config, load_preinfo
 
 __version__ = "39.2.4.0"
 
@@ -27,6 +27,7 @@ class Robot(Job):
         self.model_name = model_name
         self.user_default_config = load_user_config()
         self.user = {}  # {'user_name': {'config': {...}, 'history': [...]}}
+        self.rag = True
 
         if model_name is not None:
             model_config = load_model_config(model_name)
@@ -40,26 +41,26 @@ class Robot(Job):
             return all(value is not None for key, value in args.items() if key != 'proxy')
         return False
 
-    def toAt(self, msg: WxMsg) -> bool:
+    def toAt(self, msg: WxMsg, pre_info: str=None) -> bool:
         """
         处理被 @ 消息
         :param msg: 微信消息结构
         :return: 处理状态，`True` 成功，`False` 失败
         """
-        return self.toChitchat(msg)
+        return self.toChitchat(msg, pre_info)
     
     def mask_think(self, response: str) -> str:
         begin = response.find("<think>")
         end = response.find("</think>")
         return response[end+10:]
 
-    def toChitchat(self, msg: WxMsg) -> bool:
+    def toChitchat(self, msg: WxMsg, pre_info: str=None) -> bool:
         """
         闲聊模式
         """
         if self.model_name:
-            wait_msg = f"思考ing...\n请等待, 前面还有 {self.wcf.msgQ.qsize()} 人"
-            self.replyTextMsg(wait_msg, msg)
+            # wait_msg = f"思考ing...\n请等待, 前面还有 {self.wcf.msgQ.qsize()} 人"
+            # self.replyTextMsg(wait_msg, msg)
             # 初始化用户配置 & 处理用户历史记录
             if msg.sender not in self.user:
                 self.user[msg.sender] = {}
@@ -67,9 +68,13 @@ class Robot(Job):
                 self.user[msg.sender]['history'] = self.model.default_messages + [{"role": "user", "content": msg.content}]
             else:
                 self.user[msg.sender]['history'].append({"role": "user", "content": msg.content})
-                self.user[msg.sender]['history'] = self.model.clean_history_messages(self.user[msg.sender]['history'], history=3)
+                self.user[msg.sender]['history'] = self.model.clean_history_messages(self.user[msg.sender]['history'], history=5)
+            # 使用RAG, 添加前置知识
+            if self.rag and pre_info is not None:
+                self.user[msg.sender]['history'][0]['content'] = pre_info + self.user[msg.sender]['history'][0]['content']
             # 生成回复
             outputs = self.model.generate(self.user[msg.sender]['history'])
+            self.user[msg.sender]['history'].append({"role": "assistant", "content": outputs['response']})
             if self.user[msg.sender]['config']['mask_think']:
                 outputs['response'] = self.mask_think(outputs['response'])
             rsp = \
@@ -99,6 +104,11 @@ class Robot(Job):
         self.sendTextMsg(content, receivers, msg.sender)
         """
 
+        if msg.content == '/clean':
+            self.user[msg.sender]['history'] = self.model.clean_history_messages(self.user[msg.sender]['history'], history=0)
+            self.sendTextMsg(f"{msg.sender}的历史记录清理完毕, 当前列表长度: {len(self.user[msg.sender]['history'])-1}", msg.sender)
+            return
+
         # 群聊消息
         if msg.from_group():
             # 如果在群里被 @
@@ -106,8 +116,11 @@ class Robot(Job):
                 return
 
             if msg.is_at(self.wxid):  # 被@
-                msg.content = msg.content[len(self.wx_info['name'])+2:]
-                self.toAt(msg)
+                # msg.content = str(msg.content[len(self.wx_info['name'])+2:])
+                # print(msg.content)
+                if self.rag:
+                    pre_info = load_preinfo(msg.roomid)
+                self.toAt(msg, pre_info)
             return  # 处理完群聊信息，后面就不需要处理了
 
         # 非群聊信息，按消息类型进行处理

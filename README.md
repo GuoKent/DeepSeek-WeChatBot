@@ -12,10 +12,9 @@
 ## Demo
 
 <div style="display: flex; justify-content: space-between; gap: 10px;">
-  <img src="assets/demo7.jpg" alt="demo1" style="width: 48%;"/>
-  <img src="assets/demo6.jpg" alt="demo2" style="width: 48%;"/>
+  <img src="assets/demo8.jpg" alt="demo1" style="width: 48%;"/>
+  <img src="assets/demo9.jpg" alt="demo2" style="width: 48%;"/>
 </div>
-
 
 
 
@@ -78,6 +77,12 @@
 </div>
 
 
+### RAG 调用
+
+在模型的配置文件`deepseek.yaml`中将`rag`设置为`True`，然后还创建群聊的前置知识，比如群成员的身份信息，参考: `pre_info/xxxx@chatroom.txt`
+
+
+
 
 ## 参考
 
@@ -91,12 +96,13 @@
 
 ## TODO
 
-- 关于DeepSeek-R1本地部署加速推理方式待优化，当前仅使用了 KV Cache、Flash-Attention、禁用beam search、禁用采样来实现加速推理，推理速度参考：
+- 关于DeepSeek-R1本地部署加速推理方式待优化，当前仅使用了 KV Cache、Flash-Attention、量化来实现加速推理，推理速度参考：
 
   | 模型                          | 占用显存 | 生成速度    |
   | ----------------------------- | -------- | ----------- |
-  | DeepSeek-R1-Distill-Qwen-1.5B | 约 5G    | 25 tokens/s |
-  | DeepSeek-R1-Distill-Qwen-7B   | 约 14G   | 2 tokens/s  |
+  | DeepSeek-R1-Distill-Qwen-1.5B | 约 5G    | 30 tokens/s |
+  | DeepSeek-R1-Distill-Qwen-7B   | 约 9G    | 26 tokens/s |
+  | DeepSeek-R1-Distill-Qwen-14B  | 约 14G   | 16 tokens/s |
 
   > 硬件配置：RTX 4060 Ti - 16G；若有任何问题 or 优化建议，欢迎交流！
 
