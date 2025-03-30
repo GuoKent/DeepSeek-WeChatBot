@@ -20,6 +20,7 @@ _model_options = (
     "DeepSeek-R1-Distill-Qwen-7B",
     "DeepSeek-R1-Distill-Llama-8B",
     "DeepSeek-R1-Distill-Qwen-14B",
+    "QwQ-32B",
 )
 
 class DeepSeek:

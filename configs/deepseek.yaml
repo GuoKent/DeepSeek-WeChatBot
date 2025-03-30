@@ -1,7 +1,16 @@
+# _model_options = (
+#     "DeepSeek-R1-Distill-Qwen-1.5B",
+#     "DeepSeek-R1-Distill-Qwen-7B",
+#     "DeepSeek-R1-Distill-Llama-8B",
+#     "DeepSeek-R1-Distill-Qwen-14B",
+#     "QwQ-32B",
+# )
+
+
 mode: "local"  # options: {local, api}
 frame: "transformers"  # options: {transformers, vllm}
 model_name: "DeepSeek-R1-Distill-Qwen-14B"
-role: "default"
+role: "tieba_maoniang"
 history: 3
 
 model_config:

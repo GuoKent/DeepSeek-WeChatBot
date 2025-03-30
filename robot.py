@@ -12,7 +12,8 @@ from model.deepseek import DeepSeek
 from configs.robot_config import Config
 from job_mgmt import Job
 # from utils.func_news import News
-from utils.utils import load_model_config, load_preinfo
+from utils.utils import load_model_config, load_preinfo, remove_stopwords, extract_name
+from model.FaissIndexer import FaissIndexer
 
 __version__ = "39.2.4.0"
 
@@ -28,6 +29,10 @@ class Robot(Job):
         self.user_default_config = load_user_config()
         self.user = {}  # {'user_name': {'config': {...}, 'history': [...]}}
         self.rag = True
+        self.instructions = {}
+
+        self.index = FaissIndexer()
+        self.index.load_index()
 
         if model_name is not None:
             model_config = load_model_config(model_name)
@@ -119,7 +124,16 @@ class Robot(Job):
                 # msg.content = str(msg.content[len(self.wx_info['name'])+2:])
                 # print(msg.content)
                 if self.rag:
-                    pre_info = load_preinfo(msg.roomid)
+                    # print(msg.content)
+                    # content = remove_stopwords(msg.content)  # 去除停用词
+                    content = extract_name(msg.content)
+                    # print(f"extract_name content: {content}")
+                    content = ",".join(content)
+                    file_names = self.index.search_filename(content, topk=2)  # 搜索文件名
+                    # print(f"file_names: {file_names}")
+                    pre_info = load_preinfo(file_names)
+                    # print(f"pre_info: {pre_info}")
+                    # print("=====================================================")
                 self.toAt(msg, pre_info)
             return  # 处理完群聊信息，后面就不需要处理了
 
